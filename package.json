@@ -1,5 +1,5 @@
 {
-  "name": "project-name",
+  "name": "odin-weather-app",
   "version": "1.0.0",
   "devDependencies": {
     "css-loader": "^7.1.2",

@@ -1,3 +1,2 @@
-# project-name
-Project description goes here. 
-- Project name must be updated in README.md, index.html, package-lock.json and package.json
+# odin-weather-app
+Implementing a weather application utilizing APIs and asynchronous code.
