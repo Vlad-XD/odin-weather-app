@@ -5,10 +5,38 @@ import "./styles.css";
 const API_KEY = "A3H6XZ8XFWQCVMCY46XHXGB45";
 const location = "Las Vegas";
 
-// print data object to verify functions are working correctly
-fetchWeatherByLocation(location)
-.then((response) => {return getWeatherDataFromResponse(response);})
-.then((data) => {console.log(data);});
+// obtain elements from page
+const searchInput = document.querySelector("#search-bar");
+const searchButton = document.querySelector(".search-button");
+
+// print to console based on search bar input
+searchButton.addEventListener("click", async () => {
+  // prevent search button from operating if a request is being processed
+  if (searchButton.disabled) {
+    return;
+  }
+  
+  // disable button while a request is being made
+  searchButton.disabled = true;
+
+
+  try {
+    // fetch weather data using value in search input 
+    const location = searchInput.value;
+    const weatherResponse = await fetchWeatherByLocation(location);
+    const weatherData = await getWeatherDataFromResponse(weatherResponse);
+
+    // print data object
+    console.log(weatherData);
+
+  } catch {
+    console.log("Error!");
+  } finally {
+    // enable button when request is done
+    searchButton.disabled = false;
+  }
+
+})
 
 // request data from API using a location
 async function fetchWeatherByLocation(location) {
