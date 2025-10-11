@@ -3,11 +3,12 @@ import "./styles.css";
 
 // variable declarations
 const API_KEY = "A3H6XZ8XFWQCVMCY46XHXGB45";
-const location = "Las Vegas";
 
 // obtain elements from page
 const searchInput = document.querySelector("#search-bar");
 const searchButton = document.querySelector(".search-button");
+const todayContent = document.querySelector(".today-content");
+const tenDayContent = document.querySelector(".ten-day-content");
 
 // print to console based on search bar input
 searchButton.addEventListener("click", async () => {
@@ -22,12 +23,12 @@ searchButton.addEventListener("click", async () => {
 
   try {
     // fetch weather data using value in search input 
-    const location = searchInput.value;
+    const location = searchInput.value.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
     const weatherResponse = await fetchWeatherByLocation(location);
     const weatherData = await getWeatherDataFromResponse(weatherResponse);
 
-    // print data object
-    console.log(weatherData);
+    // update data on page
+    updateContent(weatherData, todayContent, tenDayContent);
 
   } catch {
     console.log("Error!");
@@ -36,7 +37,7 @@ searchButton.addEventListener("click", async () => {
     searchButton.disabled = false;
   }
 
-})
+});
 
 // request data from API using a location
 async function fetchWeatherByLocation(location) {
@@ -49,12 +50,8 @@ async function fetchWeatherByLocation(location) {
 async function getWeatherDataFromResponse(response) {
   const json = await response.json();
 
-  /* get general data:
-    - resolved address
-  */
- const addressData = json.resolvedAddress;
-
   /* get current forecast data:
+    - resolved location  
     - temperature
     - description
     - high
@@ -62,11 +59,11 @@ async function getWeatherDataFromResponse(response) {
     - icon
   */
  const todayData = {
-    temp: json.days[0].temp,
+    location: json.resolvedAddress,
+    temp: Number(json.days[0].temp).toFixed(0),
     desc: json.days[0].description,
-    high: json.days[0].tempmax,
-    low:  json.days[0].tempmin,
-    icon: json.days[0].icon
+    high: Number(json.days[0].tempmax).toFixed(0),
+    low:  Number(json.days[0].tempmin).toFixed(0)
  };
 
   /* get 10 day forecast data (includes current day)
@@ -79,18 +76,91 @@ async function getWeatherDataFromResponse(response) {
  for (let i = 0; i < 10; i++) {
   const dayData = {
     date: json.days[i].datetime,
-    high: json.days[i].tempmax,
-    low:  json.days[i].tempmin,
+    high: Number(json.days[i].tempmax).toFixed(0),
+    low:  Number(json.days[i].tempmin).toFixed(0),
     icon: json.days[i].icon
   };
   tenDayData.push(dayData);
  }
 
  const data = {
-  address: addressData,
   today: todayData,
   tenDay: tenDayData
  };
 
   return data;
+}
+
+// load an icon svg based on forecast icon name and returns an svg element
+async function loadIconSvg(iconName) {
+  const iconModule = await import(`./assets/icons/${iconName}.svg`); 
+  const iconRes = await fetch(iconModule.default);
+  const iconSvgString = await iconRes.text();
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(iconSvgString, 'image/svg+xml');
+  const icon = svgDoc.querySelector("svg");
+  return icon;
+}
+
+// update current forecast content on page
+function updateTodayContent(data, parentElement) {
+  // get child elements from parent element
+  const location = parentElement.querySelector(".location");
+  const temp = parentElement.querySelector(".temp");
+  const desc = parentElement.querySelector(".description");
+  const high = parentElement.querySelector(".high-temp");
+  const low = parentElement.querySelector(".low-temp");
+
+  // update child element data using forecast data
+  location.textContent = data.location;
+  temp.textContent = `${data.temp}°`;
+  desc.textContent = data.desc;
+  high.textContent = `H:${data.high}°`;
+  low.textContent = `L:${data.low}°`;
+}
+
+// update ten day forecast content on page
+async function updateTenDayContent(data, parentElement) {
+  // loop through ten day data to create element
+  for (let i = 0; i < data.length; i++) {
+    // create wrapper
+    const wrapper = document.createElement("li");
+    wrapper.classList.add("day-content-wrapper");
+    wrapper.classList.add(`day${i}`);
+
+    // create elements
+    const dayTitle = document.createElement("h4");
+    dayTitle.classList.add("day-title");
+    // title is different for current day, so check for current day
+    if (i === 0) {
+      dayTitle.textContent = "Today";
+    } else {
+      const dateObj = new Date(data[i].date);
+      dayTitle.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+    } 
+    wrapper.appendChild(dayTitle);
+
+    const icon = await loadIconSvg(data[i].icon);
+    icon.classList.add("day-icon");
+    wrapper.appendChild(icon);
+
+    const lowTemp = document.createElement("p");
+    lowTemp.classList.add("day-low-temp");
+    lowTemp.textContent = `L:${data[i].low}°`;
+    wrapper.appendChild(lowTemp);
+
+    const highTemp = document.createElement("p");
+    highTemp.classList.add("day-high-temp");
+    highTemp.textContent = `H:${data[i].high}°`;
+    wrapper.appendChild(highTemp);
+
+    // append wrapper to parent element
+    parentElement.appendChild(wrapper);
+  }
+}
+
+// update content on page 
+async function updateContent(data, todayElement, tenDayElement) {
+  updateTodayContent(data.today, todayElement);
+  await updateTenDayContent(data.tenDay, tenDayElement);
 }

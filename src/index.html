@@ -6,10 +6,29 @@
   <title>Weather App</title>
 </head>
 <body>
-  <label for="search-bar">Find the weather</label>
-  <div class="search-bar-wrapper">
-    <input type="text" id="search-bar" class="search-bar" placeholder="Enter a location...">
-    <button type="button" class="search-button"></button>
+  <header class="main-header">
+    <label for="search-bar">Find the weather</label>
+    <div class="search-bar-wrapper">
+      <input type="text" id="search-bar" class="search-bar" placeholder="Enter a location...">
+      <button type="button" class="search-button"></button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="today-content">
+      <h2 class="location">Las Vegas</h2>
+      <p class="temp">84°</p>
+      <p class="description">Mostly Cloudy</p>
+      <div class="hilo-wrapper">
+        <p class="high-temp">H:84°</p>
+        <p class="low-temp">L:67°</p>
+      </div>
+    </div>
+    <ul class="ten-day-content">
   </div>
+
+  <footer class="main-footer">
+    <a href="https://www.visualcrossing.com/weather-api/" class="src-link">Powered by Visual Crossing Weather API</a>
+  </footer>
 </body>
 </html>
