@@ -8,6 +8,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
     "prettier": "^3.6.2",
     "style-loader": "^4.0.0",
     "webpack": "^5.99.9",
@@ -18,20 +20,25 @@
     "clean": "rm -rf dist/",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
+    "lint:staged": "lint-staged",
     "format": "prettier --write 'src/**/*.{js,ts,jsx,tsx,json,md,css,scss,html}'",
     "format:check": "prettier --check 'src/**/*.{js,ts,jsx,tsx,json,md,css,scss,html}'",
     "lazy-build": "webpack --config webpack.prod.js",
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack serve --config webpack.dev.js",
     "deploy": "git subtree push --prefix dist origin deploy",
-
     "commit": "git commit",
     "commit:all": "git add -A && git commit",
     "precommit": "npm run lint",
     "precommit:all": "npm run lint",
-    
     "prebuild": "npm run clean",
     "predeploy": "git checkout deploy && git merge main --no-edit && npm run build && git add dist -f && git commit -m 'Deployment commit'",
-    "postdeploy": "git checkout main && git branch && echo 'Deploy has been successful!'"
+    "postdeploy": "git checkout main && git branch && echo 'Deploy has been successful!'",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,css,md,html,json}": [
+      "prettier --write 'src/**/*.{js,ts,jsx,tsx,json,md,css,scss,html}'"
+    ]
   }
 }
