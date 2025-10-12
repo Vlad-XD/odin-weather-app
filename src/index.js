@@ -7,6 +7,8 @@ import "./css/styles.css";
 // variable declarations
 const API_KEY = "A3H6XZ8XFWQCVMCY46XHXGB45";
 
+const isFirstQuery = true; // used to update layout after first search
+
 // obtain elements from page
 const searchInput = document.querySelector("#search-bar");
 const searchButton = document.querySelector(".search-button");
@@ -15,6 +17,11 @@ const tenDayContent = document.querySelector(".ten-day-content");
 
 // print to console based on search bar input
 searchButton.addEventListener("click", async () => {
+  // check if this is the initial page (i.e., first search query)
+  if (isFirstQuery) {
+    relocateSearchToHeader();
+  }
+
   // prevent search button from operating if a request is being processed
   if (searchButton.disabled) {
     return;
@@ -38,6 +45,11 @@ searchButton.addEventListener("click", async () => {
   } finally {
     // enable button when request is done
     searchButton.disabled = false;
+
+    // check if this is the initial page (i.e., first search query)
+    if (isFirstQuery) {
+      mainContentIsVisible(true);
+    }
   }
 });
 
@@ -181,4 +193,29 @@ async function updateTenDayContent(data, parentElement) {
 async function updateContent(data, todayElement, tenDayElement) {
   updateTodayContent(data.today, todayElement);
   await updateTenDayContent(data.tenDay, tenDayElement);
+}
+
+// relocate search bar to header after initial query
+function relocateSearchToHeader() {
+  const header = document.querySelector(".main-header");
+  const searchBarContainer = document.querySelector(".search-bar-wrapper");
+  const searchTitle = document.querySelector(".search-bar-label");
+
+  header.appendChild(searchBarContainer);
+  searchBarContainer.classList.remove("in-main");
+  searchTitle.classList.add("hidden");
+}
+
+// set visibility of main content element
+function mainContentIsVisible(bool) {
+  const todayContent = document.querySelector(".today-content");
+  const tenDayContent = document.querySelector(".ten-day-content-wrapper");
+
+  if (bool === true) {
+    todayContent.classList.remove("hidden");
+    tenDayContent.classList.remove("hidden");
+  } else {
+    todayContent.classList.add("hidden");
+    tenDayContent.classList.add("hidden");
+  }
 }

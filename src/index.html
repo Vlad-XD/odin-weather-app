@@ -6,33 +6,34 @@
     <title>Weather App</title>
   </head>
   <body>
-    <header class="main-header">
-      <div class="search-bar-wrapper content-active">
-        <label class="hidden" for="search-bar">Find the weather</label>
-        <input type="text" id="search-bar" class="search-bar" placeholder="Enter a location..." />
-        <button type="button" class="search-button">
-          <svg
-            class="search-button-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="feather feather-search"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </div>
-    </header>
+    <header class="main-header"></header>
 
     <div class="main-content">
-      <div class="today-content">
+      <div class="search-bar-wrapper in-main">
+        <label class="search-bar-label" for="search-bar">What's the Weather?</label>
+        <div class="search-bar-input-wrapper">
+          <input type="text" id="search-bar" class="search-bar" placeholder="Enter a location..." />
+          <button type="button" class="search-button">
+            <svg
+              class="search-button-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-search"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="today-content hidden">
         <h2 class="location">Las Vegas</h2>
         <p class="temp">84</p>
         <p class="description">Mostly Cloudy</p>
@@ -41,7 +42,7 @@
           <p class="low-temp">L:67°</p>
         </div>
       </div>
-      <div class="ten-day-content-wrapper">
+      <div class="ten-day-content-wrapper hidden">
         <div class="ten-day-label">
           <svg class="ten-day-label-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <title>calendar-month</title>

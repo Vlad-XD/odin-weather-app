@@ -1,12 +1,17 @@
 :root {
   --main-font-stack: "Rubik", "Helvetica Neue", "Helvetica", sans-serif;
 
+  --search-bar-label-font-size: 5rem;
+  --search-bar-in-main-font-size: 1.5rem;
   --location-font-size: 2rem;
   --temp-font-size: 7rem;
   --description-font-size: 1.5rem;
   --high-low-temp-font-size: 1.25rem;
   --ten-day-label-font-size: 0.85rem;
   --ten-day-font-size: var(--high-low-temp-font-size);
+
+  --search-bar-width: 15rem;
+  --search-button-width: 1rem;
 
   --main-bg-color: white;
   --main-text-color: black;
@@ -48,14 +53,41 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.search-bar-wrapper.in-main {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.search-bar-input-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 0.2rem;
+  flex-grow: 1;
+  align-self: stretch;
+  padding: 0 1.25rem;
+}
+
+.search-bar-label {
+  font-size: var(--search-bar-label-font-size);
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .search-bar {
+  width: var(--search-bar-width);
   border: solid var(--search-unfocus-color) 1.75px;
   border-radius: 10px;
   padding: 0 1rem;
   color: var(--search-unfocus-color);
+}
+
+.in-main .search-bar {
+  font-size: var(--search-bar-in-main-font-size);
+  border-width: 2px;
+  flex: 1 1 0;
 }
 
 .search-bar:hover,
@@ -72,8 +104,6 @@ body {
 }
 
 .search-button {
-  width: 1rem;
-  height: 1rem;
   background: none;
   appearance: none;
   display: flex;
@@ -86,7 +116,13 @@ body {
 }
 
 .search-button-icon {
+  width: var(--search-button-width);
+  height: auto;
   stroke: var(--search-unfocus-color);
+}
+
+.in-main .search-button-icon {
+  width: calc(var(--search-button-width) * 2);
 }
 
 .search-button-icon:hover {
@@ -107,7 +143,6 @@ body {
   align-items: center;
   margin: auto;
   padding: 2rem;
-  gap: 10rem;
 }
 
 .today-content {
@@ -115,6 +150,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  margin-right: 10rem;
 }
 
 .location {
@@ -240,10 +276,22 @@ body {
   display: none;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 725px) {
   .main-content {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
+  }
+
+  .today-content {
+    margin-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .in-main .search-bar-input-wrapper {
+    align-self: center;
+  }
+
+  .in-main .search-bar {
+    flex-grow: 0;
   }
 }
