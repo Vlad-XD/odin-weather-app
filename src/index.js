@@ -1,5 +1,8 @@
 // import css
-import "./styles.css";
+import "./css/fonts.css";
+import "./css/normalize.css";
+import "./css/reset.css";
+import "./css/styles.css";
 
 // variable declarations
 const API_KEY = "A3H6XZ8XFWQCVMCY46XHXGB45";
@@ -16,27 +19,26 @@ searchButton.addEventListener("click", async () => {
   if (searchButton.disabled) {
     return;
   }
-  
+
   // disable button while a request is being made
   searchButton.disabled = true;
 
-
   try {
-    // fetch weather data using value in search input 
-    const location = searchInput.value.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+    // fetch weather data using value in search input
+    const location = searchInput.value
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
     const weatherResponse = await fetchWeatherByLocation(location);
     const weatherData = await getWeatherDataFromResponse(weatherResponse);
 
     // update data on page
     updateContent(weatherData, todayContent, tenDayContent);
-
   } catch {
     console.log("Error!");
   } finally {
     // enable button when request is done
     searchButton.disabled = false;
   }
-
 });
 
 // request data from API using a location
@@ -58,13 +60,13 @@ async function getWeatherDataFromResponse(response) {
     - low
     - icon
   */
- const todayData = {
+  const todayData = {
     location: json.resolvedAddress,
     temp: Number(json.days[0].temp).toFixed(0),
-    desc: json.days[0].description,
+    desc: json.days[0].conditions,
     high: Number(json.days[0].tempmax).toFixed(0),
-    low:  Number(json.days[0].tempmin).toFixed(0)
- };
+    low: Number(json.days[0].tempmin).toFixed(0),
+  };
 
   /* get 10 day forecast data (includes current day)
     - date
@@ -72,32 +74,42 @@ async function getWeatherDataFromResponse(response) {
     - low 
     - icon
   */
- const tenDayData = [];
- for (let i = 0; i < 10; i++) {
-  const dayData = {
-    date: json.days[i].datetime,
-    high: Number(json.days[i].tempmax).toFixed(0),
-    low:  Number(json.days[i].tempmin).toFixed(0),
-    icon: json.days[i].icon
-  };
-  tenDayData.push(dayData);
- }
+  const tenDayData = [];
+  for (let i = 0; i < 10; i++) {
+    const dayData = {
+      date: json.days[i].datetime,
+      high: Number(json.days[i].tempmax).toFixed(0),
+      low: Number(json.days[i].tempmin).toFixed(0),
+      icon: json.days[i].icon,
+    };
+    tenDayData.push(dayData);
+  }
 
- const data = {
-  today: todayData,
-  tenDay: tenDayData
- };
+  const data = {
+    today: todayData,
+    tenDay: tenDayData,
+  };
 
   return data;
 }
 
 // load an icon svg based on forecast icon name and returns an svg element
 async function loadIconSvg(iconName) {
-  const iconModule = await import(`./assets/icons/${iconName}.svg`); 
+  const iconModule = await import(`./assets/icons/${iconName}.svg`);
   const iconRes = await fetch(iconModule.default);
-  const iconSvgString = await iconRes.text();
+  let iconSvgString = await iconRes.text();
+  // replace styling class name to prevent icon styles from conflicting with each other
+
+  // Replace classes in the CSS inside <style>
+  iconSvgString = iconSvgString.replace(/\.cls-(\d+)/g, `.${iconName}-cls-$1`);
+  // Replace class attributes on elements
+  iconSvgString = iconSvgString.replace(
+    /class="cls-(\d+)"/g,
+    `class="${iconName}-cls-$1"`,
+  );
+
   const parser = new DOMParser();
-  const svgDoc = parser.parseFromString(iconSvgString, 'image/svg+xml');
+  const svgDoc = parser.parseFromString(iconSvgString, "image/svg+xml");
   const icon = svgDoc.querySelector("svg");
   return icon;
 }
@@ -113,7 +125,7 @@ function updateTodayContent(data, parentElement) {
 
   // update child element data using forecast data
   location.textContent = data.location;
-  temp.textContent = `${data.temp}°`;
+  temp.textContent = data.temp;
   desc.textContent = data.desc;
   high.textContent = `H:${data.high}°`;
   low.textContent = `L:${data.low}°`;
@@ -121,6 +133,9 @@ function updateTodayContent(data, parentElement) {
 
 // update ten day forecast content on page
 async function updateTenDayContent(data, parentElement) {
+  // clear current ten day data
+  parentElement.innerHTML = "";
+
   // loop through ten day data to create element
   for (let i = 0; i < data.length; i++) {
     // create wrapper
@@ -136,12 +151,15 @@ async function updateTenDayContent(data, parentElement) {
       dayTitle.textContent = "Today";
     } else {
       const dateObj = new Date(data[i].date);
-      dayTitle.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-    } 
+      dayTitle.textContent = dateObj.toLocaleDateString("en-US", {
+        weekday: "short",
+      });
+    }
     wrapper.appendChild(dayTitle);
 
     const icon = await loadIconSvg(data[i].icon);
     icon.classList.add("day-icon");
+    icon.classList.add(`${data[i].icon}`);
     wrapper.appendChild(icon);
 
     const lowTemp = document.createElement("p");
@@ -159,7 +177,7 @@ async function updateTenDayContent(data, parentElement) {
   }
 }
 
-// update content on page 
+// update content on page
 async function updateContent(data, todayElement, tenDayElement) {
   updateTodayContent(data.today, todayElement);
   await updateTenDayContent(data.tenDay, tenDayElement);

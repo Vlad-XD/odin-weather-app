@@ -1,0 +1,103 @@
+/* Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Add accessible line height */
+body {
+  line-height: 1.5;
+}
+
+/* keep line height smallers for certain elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+button,
+label,
+ul,
+ol {
+  line-height: 1;
+}
+
+/* remmove styles from lists */
+ol,
+ul {
+  list-style: none;
+}
+
+/* Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+  /* Remove default font-weight and size*/
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+/* Remove default link styles */
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* remove default focus styles for form elements */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none; /* remove browser outline */
+  box-shadow: none; /* remove glow in Safari/Chrome */
+  border-color: inherit; /* fallback border */
+}

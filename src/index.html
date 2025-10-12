@@ -1,34 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather App</title>
-</head>
-<body>
-  <header class="main-header">
-    <label for="search-bar">Find the weather</label>
-    <div class="search-bar-wrapper">
-      <input type="text" id="search-bar" class="search-bar" placeholder="Enter a location...">
-      <button type="button" class="search-button"></button>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="search-bar-wrapper content-active">
+        <label class="hidden" for="search-bar">Find the weather</label>
+        <input type="text" id="search-bar" class="search-bar" placeholder="Enter a location..." />
+        <button type="button" class="search-button">
+          <svg
+            class="search-button-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-search"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
 
-  <div class="main-content">
-    <div class="today-content">
-      <h2 class="location">Las Vegas</h2>
-      <p class="temp">84°</p>
-      <p class="description">Mostly Cloudy</p>
-      <div class="hilo-wrapper">
-        <p class="high-temp">H:84°</p>
-        <p class="low-temp">L:67°</p>
+    <div class="main-content">
+      <div class="today-content">
+        <h2 class="location">Las Vegas</h2>
+        <p class="temp">84</p>
+        <p class="description">Mostly Cloudy</p>
+        <div class="hilo-wrapper">
+          <p class="high-temp">H:84°</p>
+          <p class="low-temp">L:67°</p>
+        </div>
+      </div>
+      <div class="ten-day-content-wrapper">
+        <div class="ten-day-label">
+          <svg class="ten-day-label-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>calendar-month</title>
+            <path
+              d="M9,10V12H7V10H9M13,10V12H11V10H13M17,10V12H15V10H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M9,14V16H7V14H9M13,14V16H11V14H13M17,14V16H15V14H17Z"
+            />
+          </svg>
+          <p class="ten-day-label-text">10-Day Forecast</p>
+        </div>
+        <ul class="ten-day-content"></ul>
       </div>
     </div>
-    <ul class="ten-day-content">
-  </div>
 
-  <footer class="main-footer">
-    <a href="https://www.visualcrossing.com/weather-api/" class="src-link">Powered by Visual Crossing Weather API</a>
-  </footer>
-</body>
+    <footer class="main-footer">
+      <a href="https://www.visualcrossing.com/weather-api/" class="src-link" target="_blank" rel="noopener noreferrer"
+        >Powered by Visual Crossing Weather API</a
+      >
+    </footer>
+  </body>
 </html>

@@ -1,0 +1,249 @@
+:root {
+  --main-font-stack: "Rubik", "Helvetica Neue", "Helvetica", sans-serif;
+
+  --location-font-size: 2rem;
+  --temp-font-size: 7rem;
+  --description-font-size: 1.5rem;
+  --high-low-temp-font-size: 1.25rem;
+  --ten-day-label-font-size: 0.85rem;
+  --ten-day-font-size: var(--high-low-temp-font-size);
+
+  --main-bg-color: white;
+  --main-text-color: black;
+  --header-shadow-color: rgba(0, 0, 0, 0.15);
+  --footer-border-color: rgba(0, 0, 0, 0.15);
+  --search-unfocus-color: #6c757d;
+  --ten-day-border-color: rgba(0, 0, 0, 0.3);
+  --ten-day-label-color: var(--ten-day-border-color);
+  --api-link-color: #6c757d;
+  --api-link-hover-color: black;
+}
+
+html {
+  font-family: var(--body-font-stack);
+  height: 100%;
+}
+
+body {
+  color: var(--main-text-color);
+  background-color: var(--main-bg-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-header,
+.main-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+}
+
+.main-header {
+  box-shadow: 0 2px 2px var(--header-shadow-color);
+}
+
+.search-bar-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.search-bar {
+  border: solid var(--search-unfocus-color) 1.75px;
+  border-radius: 10px;
+  padding: 0 1rem;
+  color: var(--search-unfocus-color);
+}
+
+.search-bar:hover,
+.search-bar:focus {
+  border-color: var(--main-text-color);
+  color: var(--main-text-color);
+}
+
+/* styling the autofill bg color for some browsers */
+.search-bar:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--main-bg-color) inset;
+  -webkit-text-fill-color: var(--main-font-stack);
+  transition: background-color 5000s ease-in-out 0s; /* prevents flicker */
+}
+
+.search-button {
+  width: 1rem;
+  height: 1rem;
+  background: none;
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  cursor: pointer;
+}
+
+.search-button-icon {
+  stroke: var(--search-unfocus-color);
+}
+
+.search-button-icon:hover {
+  stroke: var(--main-text-color);
+  transform: scale(1.05);
+  transition: 0.08s ease;
+}
+
+.search-button-icon:active {
+  transform: scale(0.9);
+  transition: 0.08s ease;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-items: center;
+  align-items: center;
+  margin: auto;
+  padding: 2rem;
+  gap: 10rem;
+}
+
+.today-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.location {
+  font-size: var(--location-font-size);
+}
+
+.temp {
+  font-size: var(--temp-font-size);
+  position: relative;
+  margin-top: -1.5rem;
+  margin-bottom: -1.5rem;
+}
+
+/* styling degree symbol in CSS to prevent it from affecting alignment of the text */
+.temp::after {
+  content: "°";
+  position: absolute;
+  right: -0.8ch;
+}
+
+.description {
+  font-size: var(--description-font-size);
+}
+
+.hilo-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: var(--high-low-temp-font-size);
+  gap: 0.6rem;
+}
+
+.ten-day-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem 0.6rem;
+  border: solid var(--ten-day-border-color) 1px;
+  border-radius: 10px;
+}
+
+.ten-day-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ten-day-label-icon {
+  height: calc(var(--ten-day-label-font-size) * 1.3);
+  width: auto;
+  fill: var(--ten-day-label-color);
+}
+
+.ten-day-label-text {
+  font-size: var(--ten-day-label-font-size);
+  color: var(--ten-day-label-color);
+}
+
+.ten-day-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.day-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-width: calc(var(--ten-day-font-size) * 10);
+  padding: 0.2rem 0;
+  font-size: var(--ten-day-font-size);
+  gap: 1rem;
+  border-top: solid var(--ten-day-label-color) 1px;
+}
+
+.day-title {
+  width: calc(var(--ten-day-font-size) * 2.5);
+}
+
+.day-icon {
+  height: var(--ten-day-font-size);
+  width: auto;
+  margin: auto;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.day-icon.cloudy {
+  transform: scale(0.7);
+}
+
+.main-footer {
+  text-align: center;
+  border-top: solid 1.5px var(--footer-border-color);
+}
+
+.src-link,
+.src-link:visited {
+  color: var(--api-link-color);
+  transition: 0.08s ease;
+  /* Fixing mobile safari wonkiness with link colors */
+  -webkit-text-fill-color: var(--api-link-color);
+}
+
+.src-link:hover,
+.src-link:focus {
+  color: var(--api-link-hover-color);
+  -webkit-text-fill-color: var(--api-link-hover-color);
+}
+
+.src-link:hover {
+  transform: scale(1.05);
+  transition: 0.08s ease;
+}
+
+.src-link:active {
+  transform: scale(1);
+  transition: 0.08s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
