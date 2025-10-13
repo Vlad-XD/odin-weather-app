@@ -15,12 +15,15 @@ const searchButton = document.querySelector(".search-button");
 const todayContent = document.querySelector(".today-content");
 const tenDayContent = document.querySelector(".ten-day-content");
 
-// print to console based on search bar input
+// add event listener to button to run program logic
 searchButton.addEventListener("click", async () => {
   // check if this is the initial page (i.e., first search query)
   if (isFirstQuery) {
     relocateSearchToHeader();
   }
+
+  // show loading screen
+  showLoadingScreen();
 
   // prevent search button from operating if a request is being processed
   if (searchButton.disabled) {
@@ -45,6 +48,13 @@ searchButton.addEventListener("click", async () => {
   } finally {
     // enable button when request is done
     searchButton.disabled = false;
+  }
+});
+
+// Enter key on input triggers button click
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    searchButton.click();
   }
 });
 
@@ -217,8 +227,8 @@ function tempContentIsVisible(bool) {
 
 // function to show the main temp content element
 async function showTempContent(data) {
-  hideMainContent();
   await updateContent(data, todayContent, tenDayContent);
+  hideMainContent();
   tempContentIsVisible(true);
 }
 
@@ -252,7 +262,24 @@ function hideMainContent() {
 
 // function to show the error message
 function showError(msg) {
-  hideMainContent();
   updateErrorQuery(msg);
+  hideMainContent();
   errorIsVisible(true);
+}
+
+// set visibility of loading screen element
+function loadingIsVisible(bool) {
+  const loadingPage = document.querySelector(".loading-page");
+
+  if (bool === true) {
+    loadingPage.classList.remove("hidden");
+  } else {
+    loadingPage.classList.add("hidden");
+  }
+}
+
+// function to show loading screen
+function showLoadingScreen() {
+  hideMainContent();
+  loadingIsVisible(true);
 }

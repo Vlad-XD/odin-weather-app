@@ -15,6 +15,8 @@
   --search-bar-width: 15rem;
   --search-button-width: 1rem;
   --error-icon-width: 5rem;
+  --spinner-diameter: 5rem;
+  --spinner-thickness: 8px;
 
   --main-bg-color: white;
   --main-text-color: black;
@@ -22,6 +24,8 @@
   --footer-border-color: rgba(0, 0, 0, 0.15);
   --search-unfocus-color: #6c757d;
   --error-message-text-color: rgba(0, 0, 0, 0.6);
+  --spinner-light-color: rgba(0, 0, 0, 0.2);
+  --spinner-dark-color: black;
   --ten-day-border-color: rgba(0, 0, 0, 0.3);
   --ten-day-label-color: var(--ten-day-border-color);
   --api-link-color: #6c757d;
@@ -177,6 +181,29 @@ body {
   /* using both word-vreak and overflow-wrap for browser compatibility */
   word-break: break-word;
   overflow-wrap: anywhere;
+}
+
+.spinner {
+  width: var(--spinner-diameter);
+  height: var(--spinner-diameter);
+  /* Light segment of spinner */
+  border: var(--spinner-thickness) solid #ccc;
+  /* Dark segment of circle */
+  border-top-color: black;
+  /* makes the spinner a circle */
+  border-radius: 50%;
+  /* animation to continuously rotate */
+  animation: spin 1s linear infinite;
+}
+
+/* Keyframes for rotation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .today-content {
