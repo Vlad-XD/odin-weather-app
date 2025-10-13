@@ -3,6 +3,8 @@
 
   --search-bar-label-font-size: 5rem;
   --search-bar-in-main-font-size: 1.5rem;
+  --error-title-font-size: 2rem;
+  --error-message-font-size: 1rem;
   --location-font-size: 2rem;
   --temp-font-size: 7rem;
   --description-font-size: 1.5rem;
@@ -12,12 +14,14 @@
 
   --search-bar-width: 15rem;
   --search-button-width: 1rem;
+  --error-icon-width: 5rem;
 
   --main-bg-color: white;
   --main-text-color: black;
   --header-shadow-color: rgba(0, 0, 0, 0.15);
   --footer-border-color: rgba(0, 0, 0, 0.15);
   --search-unfocus-color: #6c757d;
+  --error-message-text-color: rgba(0, 0, 0, 0.6);
   --ten-day-border-color: rgba(0, 0, 0, 0.3);
   --ten-day-label-color: var(--ten-day-border-color);
   --api-link-color: #6c757d;
@@ -143,6 +147,36 @@ body {
   align-items: center;
   margin: auto;
   padding: 2rem;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-icon {
+  width: var(--error-icon-width);
+  height: auto;
+}
+
+.error-title {
+  font-size: var(--error-title-font-size);
+  white-space: nowrap;
+}
+
+.error-msg {
+  color: var(--error-message-text-color);
+  font-size: var(--error-message-font-size);
+  text-align: center;
+}
+
+.error-query {
+  display: inline;
+  /* using both word-vreak and overflow-wrap for browser compatibility */
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .today-content {

@@ -38,18 +38,13 @@ searchButton.addEventListener("click", async () => {
     const weatherResponse = await fetchWeatherByLocation(location);
     const weatherData = await getWeatherDataFromResponse(weatherResponse);
 
-    // update data on page
-    updateContent(weatherData, todayContent, tenDayContent);
+    // update and show data on page
+    showTempContent(weatherData);
   } catch {
-    console.log("Error!");
+    showError(searchInput.value);
   } finally {
     // enable button when request is done
     searchButton.disabled = false;
-
-    // check if this is the initial page (i.e., first search query)
-    if (isFirstQuery) {
-      mainContentIsVisible(true);
-    }
   }
 });
 
@@ -206,8 +201,8 @@ function relocateSearchToHeader() {
   searchTitle.classList.add("hidden");
 }
 
-// set visibility of main content element
-function mainContentIsVisible(bool) {
+// set visibility of main temp content element
+function tempContentIsVisible(bool) {
   const todayContent = document.querySelector(".today-content");
   const tenDayContent = document.querySelector(".ten-day-content-wrapper");
 
@@ -218,4 +213,46 @@ function mainContentIsVisible(bool) {
     todayContent.classList.add("hidden");
     tenDayContent.classList.add("hidden");
   }
+}
+
+// function to show the main temp content element
+async function showTempContent(data) {
+  hideMainContent();
+  await updateContent(data, todayContent, tenDayContent);
+  tempContentIsVisible(true);
+}
+
+// set visibility of error element
+function errorIsVisible(bool) {
+  const errorContent = document.querySelector(".error-content");
+
+  if (bool === true) {
+    errorContent.classList.remove("hidden");
+  } else {
+    errorContent.classList.add("hidden");
+  }
+}
+
+// query message for error element
+function updateErrorQuery(msg) {
+  const errorQuery = document.querySelector(".error-query");
+  errorQuery.textContent = msg;
+}
+
+// hide all children in main content wrapper: the idea being hide all
+// all content and then show what's necessary
+function hideMainContent() {
+  const mainContent = document.querySelector(".main-content");
+  const mainContentChildren = mainContent.children;
+
+  for (const child of mainContentChildren) {
+    child.classList.add("hidden");
+  }
+}
+
+// function to show the error message
+function showError(msg) {
+  hideMainContent();
+  updateErrorQuery(msg);
+  errorIsVisible(true);
 }
