@@ -11,12 +11,18 @@
   --high-low-temp-font-size: 1.25rem;
   --ten-day-label-font-size: 0.85rem;
   --ten-day-font-size: var(--high-low-temp-font-size);
+  --long-description-font-size: 0.9rem;
+  --hour-time-font-size: 0.8rem;
+  --hour-font-size: 1.25rem;
 
   --search-bar-width: 15rem;
   --search-button-width: 1rem;
   --error-icon-width: 5rem;
   --spinner-diameter: 5rem;
   --spinner-thickness: 8px;
+  --desktop-content-width: 45rem;
+  --ten-day-wrapper-width: calc(var(--ten-day-font-size) * 10);
+  --mobile-content-width: var(--search-bar-width);
 
   --main-bg-color: white;
   --main-text-color: black;
@@ -28,6 +34,7 @@
   --spinner-dark-color: black;
   --ten-day-border-color: rgba(0, 0, 0, 0.3);
   --ten-day-label-color: var(--ten-day-border-color);
+  --hour-border-color: var(--ten-day-label-color);
   --api-link-color: #6c757d;
   --api-link-hover-color: black;
 }
@@ -151,6 +158,7 @@ body {
   align-items: center;
   margin: auto;
   padding: 2rem;
+  max-width: var(--desktop-content-width);
 }
 
 .error-content {
@@ -281,14 +289,15 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  min-width: calc(var(--ten-day-font-size) * 10);
-  padding: 0.2rem 0;
+  min-width: var(--ten-day-wrapper-width);
   font-size: var(--ten-day-font-size);
+  padding-top: 0.3rem;
   gap: 1rem;
   border-top: solid var(--ten-day-label-color) 1px;
 }
 
 .day-title {
+  white-space: nowrap;
   width: calc(var(--ten-day-font-size) * 2.5);
 }
 
@@ -300,8 +309,73 @@ body {
   flex-grow: 0;
 }
 
-.day-icon.cloudy {
+/* Due to viewbox, cloudy icon was scaling disproportionately */
+.cloudy {
   transform: scale(0.7);
+}
+
+.day-hourly-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: solid var(--ten-day-border-color) 1px;
+  border-radius: 10px;
+  /* On desktop layout, we want this element to span both columns*/
+  grid-column: 1 / 3;
+  margin-top: 2rem;
+}
+
+.long-description {
+  font-size: var(--long-description-font-size);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
+  border-bottom: solid var(--hour-border-color) 1px;
+}
+
+.hour-content {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 0.1rem;
+  /* prevent scrollbar from hour content from obscuring content */
+  padding-bottom: 1rem; /* adjust as needed */
+  box-sizing: border-box;
+}
+
+.hour-content-wrapper {
+  position: relative;
+  min-width: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hour-title {
+  font-size: var(--hour-time-font-size);
+  letter-spacing: -1px;
+}
+
+.hour-icon {
+  height: var(--hour-font-size);
+  width: auto;
+  margin: auto;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.hour-temp {
+  font-size: var(--hour-font-size);
+}
+
+/* styling degree symbol in CSS to prevent it from affecting alignment of the text */
+.hour-temp::after {
+  content: "°";
+  position: absolute;
+  right: 0.55ch;
 }
 
 .main-footer {
@@ -345,7 +419,6 @@ body {
 
   .today-content {
     margin-right: 0;
-    margin-bottom: 2rem;
   }
 
   .in-main .search-bar-input-wrapper {
@@ -354,5 +427,21 @@ body {
 
   .in-main .search-bar {
     flex-grow: 0;
+  }
+
+  .search-bar-label {
+    font-size: calc(var(--search-bar-label-font-size) * 0.8);
+  }
+
+  .ten-day-content {
+    max-width: var(--mobile-content-width);
+  }
+
+  .day-hourly-content {
+    width: var(--mobile-content-width);
+    grid-row: 2 / 3;
+    /* On mobile, we want this element to be above the ten day forecast */
+    grid-column: 1 / 2;
+    margin-bottom: 2rem;
   }
 }

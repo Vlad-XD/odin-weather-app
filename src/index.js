@@ -14,6 +14,7 @@ const searchInput = document.querySelector("#search-bar");
 const searchButton = document.querySelector(".search-button");
 const todayContent = document.querySelector(".today-content");
 const tenDayContent = document.querySelector(".ten-day-content");
+const hourlyContent = document.querySelector(".day-hourly-content");
 
 // add event listener to button to run program logic
 searchButton.addEventListener("click", async () => {
@@ -85,7 +86,23 @@ async function getWeatherDataFromResponse(response) {
     low: Number(json.days[0].tempmin).toFixed(0),
   };
 
-  /* get 10 day forecast data (includes current day)
+  /* get hourly data for today:
+    - time
+    - icon
+    - temp
+  */
+  const hourlyData = [];
+  for (let i = 0; i < 24; i++) {
+    const hourData = {
+      desc: json.days[0].description,
+      time: json.days[0].hours[i].datetime,
+      temp: Number(json.days[0].hours[i].temp).toFixed(0),
+      icon: json.days[0].hours[i].icon,
+    };
+    hourlyData.push(hourData);
+  }
+
+  /* get 10 day forecast data (includes current day):
     - date
     - high 
     - low 
@@ -105,6 +122,7 @@ async function getWeatherDataFromResponse(response) {
   const data = {
     today: todayData,
     tenDay: tenDayData,
+    hour: hourlyData,
   };
 
   return data;
@@ -153,7 +171,7 @@ async function updateTenDayContent(data, parentElement) {
   // clear current ten day data
   parentElement.innerHTML = "";
 
-  // loop through ten day data to create element
+  // loop through ten day data to create elements
   for (let i = 0; i < data.length; i++) {
     // create wrapper
     const wrapper = document.createElement("li");
@@ -194,10 +212,52 @@ async function updateTenDayContent(data, parentElement) {
   }
 }
 
+// update hourly forecast content on page
+async function updateHourlyContent(data, parentElement) {
+  const description = parentElement.querySelector(".long-description");
+  const hourContent = parentElement.querySelector(".hour-content");
+
+  // clear current hourly data
+  hourContent.innerHTML = "";
+
+  // update description
+  description.textContent = data[0].desc;
+
+  // loop through hourly data to create elements
+  for (let i = 0; i < data.length; i++) {
+    // create wrapper
+    const wrapper = document.createElement("li");
+    wrapper.classList.add("hour-content-wrapper");
+    wrapper.classList.add(`hour${i}`);
+
+    // create elements
+    const hourTitle = document.createElement("p");
+    hourTitle.classList.add("hour-title");
+    const hourObject = new Date(`1970-01-01T${data[i].time}Z`);
+    const options = { hour: "numeric", hour12: true, timeZone: "UTC" };
+    hourTitle.textContent = hourObject.toLocaleTimeString([], options);
+    wrapper.appendChild(hourTitle);
+
+    const icon = await loadIconSvg(data[i].icon);
+    icon.classList.add("hour-icon");
+    icon.classList.add(`${data[i].icon}`);
+    wrapper.appendChild(icon);
+
+    const temp = document.createElement("p");
+    temp.classList.add("hour-temp");
+    temp.textContent = `${data[i].temp}`;
+    wrapper.appendChild(temp);
+
+    // append wrapper to parent element
+    hourContent.appendChild(wrapper);
+  }
+}
+
 // update content on page
-async function updateContent(data, todayElement, tenDayElement) {
+async function updateContent(data, todayElement, tenDayElement, hourElement) {
   updateTodayContent(data.today, todayElement);
   await updateTenDayContent(data.tenDay, tenDayElement);
+  await updateHourlyContent(data.hour, hourElement);
 }
 
 // relocate search bar to header after initial query
@@ -215,19 +275,22 @@ function relocateSearchToHeader() {
 function tempContentIsVisible(bool) {
   const todayContent = document.querySelector(".today-content");
   const tenDayContent = document.querySelector(".ten-day-content-wrapper");
+  const hourlyContent = document.querySelector(".day-hourly-content");
 
   if (bool === true) {
     todayContent.classList.remove("hidden");
     tenDayContent.classList.remove("hidden");
+    hourlyContent.classList.remove("hidden");
   } else {
     todayContent.classList.add("hidden");
     tenDayContent.classList.add("hidden");
+    hourlyContent.classList.add("hidden");
   }
 }
 
 // function to show the main temp content element
 async function showTempContent(data) {
-  await updateContent(data, todayContent, tenDayContent);
+  await updateContent(data, todayContent, tenDayContent, hourlyContent);
   hideMainContent();
   tempContentIsVisible(true);
 }
