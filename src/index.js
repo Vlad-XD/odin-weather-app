@@ -6,15 +6,32 @@ import "./css/styles.css";
 
 // variable declarations
 const API_KEY = "A3H6XZ8XFWQCVMCY46XHXGB45";
+// these themes are also the corresponding class names in css
+const THEMES = {
+  localStorageKey: "theme",
+  light: "light-theme",
+  dark: "dark-theme",
+};
 
 const isFirstQuery = true; // used to update layout after first search
+let currentTheme = THEMES.light; // used to keep track of themes
 
 // obtain elements from page
+const rootElement = document.documentElement;
+const themeToggle = document.querySelector(".theme-toggle");
 const searchInput = document.querySelector("#search-bar");
 const searchButton = document.querySelector(".search-button");
 const todayContent = document.querySelector(".today-content");
 const tenDayContent = document.querySelector(".ten-day-content");
 const hourlyContent = document.querySelector(".day-hourly-content");
+
+// check local storage for a theme
+getThemeFromLocal();
+
+// add event listener to theme toggle button
+themeToggle.addEventListener("click", () => {
+  toggleTheme();
+});
 
 // add event listener to button to run program logic
 searchButton.addEventListener("click", async () => {
@@ -143,9 +160,16 @@ async function loadIconSvg(iconName) {
     `class="${iconName}-cls-$1"`,
   );
 
+  // Adjust stroke color to adapt to themes
+  iconSvgString = iconSvgString.replace(
+    /stroke:\s*#[0-9a-fA-F]{3,6};/g,
+    "stroke:currentColor;",
+  );
+
   const parser = new DOMParser();
   const svgDoc = parser.parseFromString(iconSvgString, "image/svg+xml");
   const icon = svgDoc.querySelector("svg");
+
   return icon;
 }
 
@@ -345,4 +369,61 @@ function loadingIsVisible(bool) {
 function showLoadingScreen() {
   hideMainContent();
   loadingIsVisible(true);
+}
+
+// check local storage for a theme and if found, activate it
+function getThemeFromLocal() {
+  const localTheme = localStorage.getItem(THEMES.localStorageKey);
+
+  if (localTheme !== null) {
+    if (localTheme === THEMES.dark) {
+      setDarkTheme(true);
+      setLightTheme(false);
+    } else {
+      setLightTheme(true);
+      setDarkTheme(false);
+    }
+  }
+}
+
+// function used by theme button to toggle themes
+function toggleTheme() {
+  if (currentTheme === THEMES.dark) {
+    setDarkTheme(false);
+    setLightTheme(true);
+  } else {
+    setDarkTheme(true);
+    setLightTheme(false);
+  }
+}
+
+// helper functions for theme toggling
+function setDarkTheme(bool) {
+  const themeName = THEMES.dark;
+  const themeIcon = document.querySelector(".dark-icon");
+
+  if (bool === true) {
+    rootElement.classList.add(themeName);
+    themeIcon.classList.remove("icon-hidden");
+    currentTheme = themeName;
+    localStorage.setItem(THEMES.localStorageKey, themeName);
+  } else {
+    rootElement.classList.remove(themeName);
+    themeIcon.classList.add("icon-hidden");
+  }
+}
+
+function setLightTheme(bool) {
+  const themeName = THEMES.light;
+  const themeIcon = document.querySelector(".light-icon");
+
+  if (bool === true) {
+    rootElement.classList.add(themeName);
+    themeIcon.classList.remove("icon-hidden");
+    currentTheme = themeName;
+    localStorage.setItem(THEMES.localStorageKey, themeName);
+  } else {
+    rootElement.classList.remove(themeName);
+    themeIcon.classList.add("icon-hidden");
+  }
 }
