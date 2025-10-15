@@ -18,6 +18,7 @@ let currentTheme = THEMES.light; // used to keep track of themes
 
 // obtain elements from page
 const rootElement = document.documentElement;
+const tabTitle = document.querySelector("title");
 const themeToggle = document.querySelector(".theme-toggle");
 const searchInput = document.querySelector("#search-bar");
 const searchButton = document.querySelector(".search-button");
@@ -312,10 +313,21 @@ function tempContentIsVisible(bool) {
   }
 }
 
+// update the tab title with the passed text
+function updateTabTitle(location = null) {
+  const tabPrefix = "Weather";
+  if (location === null) {
+    tabTitle.textContent = tabPrefix;
+  } else {
+    tabTitle.textContent = `${tabPrefix} | ${location}`;
+  }
+}
+
 // function to show the main temp content element
 async function showTempContent(data) {
   await updateContent(data, todayContent, tenDayContent, hourlyContent);
   hideMainContent();
+  updateTabTitle(data.today.location);
   tempContentIsVisible(true);
 }
 
@@ -351,6 +363,7 @@ function hideMainContent() {
 function showError(msg) {
   updateErrorQuery(msg);
   hideMainContent();
+  updateTabTitle();
   errorIsVisible(true);
 }
 
