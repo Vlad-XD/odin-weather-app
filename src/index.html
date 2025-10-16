@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather</title>
+    <!-- Critical inline CSS to prevents FOUC -->
+    <style>
+      .hidden-body {
+        opacity: 0;
+      }
+    </style>
   </head>
-  <body>
+  <body class="hidden-body">
     <header class="main-header">
       <div class="theme-toggle-wrapper">
         <button type="button" class="theme-toggle">

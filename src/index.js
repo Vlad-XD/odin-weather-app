@@ -77,6 +77,11 @@ searchInput.addEventListener("keydown", (e) => {
   }
 });
 
+// when assets have loaded, indicate page is ready and can be revealed
+window.addEventListener("DOMContentLoaded", () => {
+  pageReady();
+});
+
 // request data from API using a location
 async function fetchWeatherByLocation(location) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${API_KEY}`;
@@ -396,6 +401,9 @@ function getThemeFromLocal() {
       setLightTheme(true);
       setDarkTheme(false);
     }
+  } else {
+    setLightTheme(true);
+    setDarkTheme(false);
   }
 }
 
@@ -439,4 +447,9 @@ function setLightTheme(bool) {
     rootElement.classList.remove(themeName);
     themeIcon.classList.add("icon-hidden");
   }
+}
+
+// removes hidden class from the body of the page to reveal content
+function pageReady() {
+  document.body.classList.remove("hidden-body");
 }

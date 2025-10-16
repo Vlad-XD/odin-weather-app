@@ -72,6 +72,9 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  /* hide background initially until content has been loaded */
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
 }
 
 .main-header,
